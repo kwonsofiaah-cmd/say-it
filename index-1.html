@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffb6d3">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Say it">
+<title>Say It – male voice reader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700&display=swap">
+<style>
+:root{--bg:#fdf0f5;--bg2:#e9f4ff;--ink:#4a3f5c;--mute:#8a7fa0;--panel:#ffffff;--line:#f3c9dc;--pink:#ffb6d3;--pink-d:#e0608f;--mint:#c4efdc;--lav:#dccbff;--butter:#fff2b8;--sky:#bfe3ff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2b2438;--bg2:#243044;--ink:#f5ebff;--mute:#bba9d6;--panel:#3a3150;--line:#6b5a8c;--pink-d:#ff8fb8}}
+:root[data-theme="dark"]{--bg:#2b2438;--bg2:#243044;--ink:#f5ebff;--mute:#bba9d6;--panel:#3a3150;--line:#6b5a8c;--pink-d:#ff8fb8}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:linear-gradient(170deg,var(--bg),var(--bg2));color:var(--ink);font-family:"Nunito","Avenir Next Rounded",ui-rounded,"Trebuchet MS",sans-serif;font-weight:600;line-height:1.5}
+main{max-width:560px;margin:0 auto;padding:18px 16px 40px}
+.hero{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.mascot{width:96px;height:96px;flex:none;animation:bob 3s ease-in-out infinite}
+.mouth{transform-origin:48px 62px;transform-box:fill-box}
+.talking .mouth{animation:talk .28s ease-in-out infinite}
+.talking .mascot{animation:hop .5s ease-in-out infinite}
+.wave{opacity:0}.talking .wave{opacity:1;animation:pulse .6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+@keyframes hop{50%{transform:translateY(-8px) rotate(-3deg)}}
+@keyframes talk{50%{transform:scaleY(1.9)}}
+@keyframes pulse{50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.mascot,.mouth,.wave{animation:none!important}}
+h1{font-family:"Fredoka","Trebuchet MS",sans-serif;font-weight:600;font-size:2.4rem;margin:0;color:var(--pink-d);line-height:1.1}
+p.sub{margin:4px 0 0;color:var(--mute)}
+.card{background:var(--panel);border:3px solid var(--line);border-radius:28px;padding:16px;box-shadow:0 6px 0 var(--line)}
+textarea{width:100%;min-height:140px;padding:14px;font:inherit;font-size:1.1rem;color:var(--ink);background:var(--bg);border:3px dashed var(--pink);border-radius:20px;resize:vertical}
+textarea::placeholder{color:var(--mute)}
+textarea:focus,select:focus,button:focus-visible,input:focus-visible{outline:4px solid var(--sky);outline-offset:2px}
+.row{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+label{display:flex;flex-direction:column;gap:5px;font-size:.92rem;color:var(--mute);flex:1 1 200px;min-width:0}
+select{font:inherit;font-size:1rem;padding:11px 12px;background:var(--bg);color:var(--ink);border:3px solid var(--lav);border-radius:16px;width:100%}
+input[type=range]{width:100%;accent-color:var(--pink-d)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+button{font-family:"Fredoka","Trebuchet MS",sans-serif;font-size:1.2rem;font-weight:600;padding:14px 22px;border-radius:999px;border:3px solid var(--ink);cursor:pointer;color:var(--ink);box-shadow:0 4px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+button:active{transform:translateY(4px);box-shadow:0 0 0 var(--ink)}
+#play{background:var(--pink);flex:1 1 100%}
+#stop{background:var(--butter);flex:1}#next{background:var(--lav);flex:1}
+#info{margin-top:16px;color:var(--mute);font-size:.92rem;min-height:2.6em;text-align:center}
+</style>
+</head>
+<body>
+<main>
+<div class="hero">
+<svg class="mascot" viewBox="0 0 96 96" aria-hidden="true">
+<ellipse cx="22" cy="24" rx="12" ry="12" fill="#ffd9e8"/><ellipse cx="74" cy="24" rx="12" ry="12" fill="#ffd9e8"/>
+<ellipse cx="22" cy="24" rx="6" ry="6" fill="#ffb6d3"/><ellipse cx="74" cy="24" rx="6" ry="6" fill="#ffb6d3"/>
+<circle cx="48" cy="50" r="34" fill="#fff3e6" stroke="#f3c9dc" stroke-width="3"/>
+<circle cx="36" cy="46" r="4" fill="#4a3f5c"/><circle cx="60" cy="46" r="4" fill="#4a3f5c"/>
+<circle cx="37.5" cy="44.5" r="1.3" fill="#fff"/><circle cx="61.5" cy="44.5" r="1.3" fill="#fff"/>
+<ellipse cx="27" cy="57" rx="6" ry="4" fill="#ffb6d3" opacity=".7"/><ellipse cx="69" cy="57" rx="6" ry="4" fill="#ffb6d3" opacity=".7"/>
+<ellipse class="mouth" cx="48" cy="60" rx="5" ry="3" fill="#e0608f"/>
+<path d="M38 80 L48 86 L58 80 L58 90 L48 86 L38 90 Z" fill="#bfe3ff" stroke="#4a3f5c" stroke-width="1.5" stroke-linejoin="round"/>
+<g class="wave" fill="none" stroke="#dccbff" stroke-width="3" stroke-linecap="round"><path d="M86 40q5 8 0 16"/><path d="M92 34q9 14 0 28"/></g>
+</svg>
+<div><h1>Say it!</h1><p class="sub">Type anything and I'll say it out loud.</p></div>
+</div>
+<div class="card">
+<textarea id="t" placeholder="Type here… Hola, bonjour, こんにちは, привет, مرحبا" aria-label="Text to speak"></textarea>
+<div class="row">
+<label>Language<select id="lang"></select></label>
+<label>Voice<select id="voice"></select></label>
+</div>
+<div class="row">
+<label>Speed <input id="rate" type="range" min="0.5" max="1.6" step="0.05" value="1"></label>
+<label>Pitch (lower = deeper) <input id="pitch" type="range" min="0.1" max="1.2" step="0.05" value="0.4"></label>
+</div>
+<div class="btns"><button id="play">Speak</button><button id="stop">Stop</button><button id="next">Next voice</button></div>
+<div id="info" aria-live="polite"></div>
+</div>
+</main>
+<script>
+const L=[["auto","Auto-detect"],["en-US","English"],["es-ES","Spanish"],["fr-FR","French"],["de-DE","German"],["it-IT","Italian"],["pt-BR","Portuguese"],["nl-NL","Dutch"],["sv-SE","Swedish"],["pl-PL","Polish"],["cs-CZ","Czech"],["tr-TR","Turkish"],["el-GR","Greek"],["ru-RU","Russian"],["uk-UA","Ukrainian"],["ar-SA","Arabic"],["he-IL","Hebrew"],["hi-IN","Hindi"],["th-TH","Thai"],["vi-VN","Vietnamese"],["id-ID","Indonesian"],["zh-CN","Chinese"],["ja-JP","Japanese"],["ko-KR","Korean"]];
+const $=id=>document.getElementById(id);
+const synth=window.speechSynthesis;
+L.forEach(([c,n])=>$("lang").add(new Option(n,c)));
+const MALE=/\b(male|david|mark|daniel|alex|fred|thomas|jorge|diego|juan|pablo|carlos|yannick|markus|stefan|reed|rishi|hemant|oliver|george|james|guy|ryan|matthew|sergio|antonio|luca|cosimo|ichiro|otoya|maged|tarik|ravi|henrik|magnus|filip|zdenek|ivan|pavel|dmitri|yuriy|kangkang|yunyang|eddy|rocko|aaron|arthur|gordon|lee|nathan|evan|jacques|paul|bruno|felipe|luciano|nicolas|stephan|jan|claude|google deutsch|naayf|hamed|sakhr|iol|iom|tpd|rjs|gbd|gbb|aud|ahp)\b/i;
+const FEM=/\b(female|samantha|victoria|zira|susan|karen|moira|tessa|fiona|allison|ava|kate|serena|monica|paulina|amelie|marie|anna|alice|elsa|helena|laura|lekha|kyoko|sin-ji|mei-jia|ting-ting|yelda|zosia|ioana|milena|luciana|joana|nora|ellen|siri|hazel|heera|catherine|jenny|aria|sara|zoe|lucia|elena|carmit|yuna|nanami|xiaoxiao)\b/i;
+let voices=[];
+function detect(s){
+if(/[\u3040-\u30ff]/.test(s))return"ja-JP";
+if(/[\uac00-\ud7af]/.test(s))return"ko-KR";
+if(/[\u4e00-\u9fff]/.test(s))return"zh-CN";
+if(/[\u0600-\u06ff]/.test(s))return"ar-SA";
+if(/[\u0590-\u05ff]/.test(s))return"he-IL";
+if(/[\u0900-\u097f]/.test(s))return"hi-IN";
+if(/[\u0e00-\u0e7f]/.test(s))return"th-TH";
+if(/[\u0370-\u03ff]/.test(s))return"el-GR";
+if(/[\u0400-\u04ff]/.test(s))return/[іїєґ]/i.test(s)?"uk-UA":"ru-RU";
+if(/[ñ¿¡]/i.test(s))return"es-ES";
+if(/[ßäöü]/i.test(s))return"de-DE";
+if(/[ãõ]/i.test(s))return"pt-BR";
+if(/[ışğİ]/.test(s))return"tr-TR";
+if(/[çœèêàâîôû]/i.test(s))return"fr-FR";
+if(/[ąćęłńśźż]/i.test(s))return"pl-PL";
+return"en-US";
+}
+function curLang(){const v=$("lang").value;return v==="auto"?detect($("t").value):v}
+function candidates(lang){
+const p=lang.slice(0,2).toLowerCase();
+const m=voices.filter(v=>v.lang.toLowerCase().replace("_","-").startsWith(p));
+return m.sort((a,b)=>score(b)-score(a));
+}
+function score(v){let s=0;if(MALE.test(v.name))s+=3;if(FEM.test(v.name))s-=4;if(v.localService)s+=1;return s}
+function fillVoices(){
+const lang=curLang();
+const c=candidates(lang);
+const sel=$("voice");const keep=sel.value;
+sel.innerHTML="";
+sel.add(new Option("Best male match","auto"));
+c.forEach(v=>sel.add(new Option(v.name+(MALE.test(v.name)?" (male)":""),v.name)));
+if([...sel.options].some(o=>o.value===keep))sel.value=keep;
+}
+function load(){voices=synth.getVoices();fillVoices()}
+if(!synth){$("info").textContent="This browser does not support speech. Try Chrome, Safari, or Edge."}
+else{load();synth.onvoiceschanged=load}
+$("lang").onchange=fillVoices;
+let timer;$("t").oninput=()=>{clearTimeout(timer);timer=setTimeout(fillVoices,300)};
+function speak(){
+if(!synth)return;
+const text=$("t").value.trim();
+if(!text){$("info").textContent="Type something first.";return}
+synth.cancel();
+const lang=curLang();
+const c=candidates(lang);
+let v=null;
+if($("voice").value!=="auto")v=voices.find(x=>x.name===$("voice").value);
+else v=c.find(x=>MALE.test(x.name)&&!FEM.test(x.name))||c.find(x=>!FEM.test(x.name))||c[0]||null;
+const chunks=text.match(/[^.!?。！？\n]+[.!?。！？]*/g)||[text];
+chunks.forEach((ch,i)=>{
+if(!ch.trim())return;
+const u=new SpeechSynthesisUtterance(ch.trim());
+u.lang=v?v.lang:lang;
+if(v)u.voice=v;
+u.rate=+$("rate").value;
+u.pitch=+$("pitch").value;
+u.onend=u.onerror=()=>{if(i===chunks.length-1)document.body.classList.remove("talking")};
+if(i===0)u.onstart=()=>{document.body.classList.add("talking");
+$("info").textContent=v?"Speaking in "+(L.find(x=>x[0]===lang)||[0,lang])[1]+" with "+v.name+(MALE.test(v.name)?"":". This voice is not labeled male, so I lowered the pitch. Try another voice in the list."):"No installed voice for "+lang+". Your device will use its default. Install that language in your system settings.";
+};
+synth.speak(u);
+});
+}
+$("play").onclick=speak;
+$("next").onclick=()=>{const s=$("voice");const n=s.options.length;if(n<2)return;let i=s.selectedIndex+1;if(i>=n)i=1;s.selectedIndex=i;speak()};
+$("stop").onclick=()=>{synth&&synth.cancel();document.body.classList.remove("talking")};
+</script>
+</body>
+</html>
